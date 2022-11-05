@@ -58,10 +58,44 @@ SET finalizado = 'S'
 WHERE codAluno = 20230001
 ;
 
-UPDATE alunos
+/*UPDATE alunos
 SET nome = 'Claudio da Silva'
 WHERE codAluno = 20230001
-;
+;*/
+
+CREATE TABLE usuarios
+    (username   VARCHAR2(50) NOT NULL
+    ,permissao  VARCHAR2(1)  NOT NULL
+    );
+    
+ALTER TABLE usuarios
+ADD CONSTRAINT usuarios_pk PRIMARY KEy (username);
+
+ALTER TABLE usuarios
+ADD CONSTRAINT usuarios_permissao_ck
+CHECK(permissao IN('C', 'A'));
+
+
+CREATE OR REPLACE TRIGGER trg_usuarios_permissao
+BEFORE UPDATE OR DELETE ON alunos
+FOR EACH ROW
+DECLARE
+    trg_permissao VARCHAR2(1);
+BEGIN
+    SELECT permissao
+    INTO trg_permissao
+    FROM usuarios
+    WHERE username = user
+    ;
+    
+    IF trg_permissao = 'A' AND :old.finalizado = 'N'
+    
+    ELSIF trg_permissao = 'C' AND :old.finalizado = 'N'
+    
+    IF :old.finalizado = 'S' THEN
+    raise_application_error(-20002, 'Impossível Alterar, o Aluno Está Finalizado');
+    END IF;
+END ;
 
 SELECT * FROM alunos;
 
