@@ -1,6 +1,6 @@
 
 -- Cria a tabela alunos com as restrições
-DROP TABLE alunos;
+DROP TABLE alunos CASCADE CONSTRAINTS;
 CREATE TABLE alunos 
    ( codAluno    NUMBER(8) NOT NULL
    , nome        VARCHAR2(100) NOT NULL
@@ -62,7 +62,7 @@ WHERE codAluno = 20230001
 SET nome = 'Claudio da Silva'
 WHERE codAluno = 20230001
 ;*/
-
+DROP TABLE usuarios CASCADE CONSTRAINTS;
 CREATE TABLE usuarios
     (username   VARCHAR2(50) NOT NULL
     ,permissao  VARCHAR2(1)  NOT NULL
@@ -78,24 +78,52 @@ CHECK(permissao IN('C', 'A'));
 
 CREATE OR REPLACE TRIGGER trg_usuarios_permissao
 BEFORE UPDATE OR DELETE ON alunos
-FOR EACH ROW
 DECLARE
-    trg_permissao VARCHAR2(1);
+    permissao_sessao VARCHAR2(1);
 BEGIN
-    SELECT permissao
-    INTO trg_permissao
-    FROM usuarios
-    WHERE username = user
-    ;
+SELECT 
+    permissao
+INTO
+    permissao_sessao
+FROM 
+    usuarios
+WHERE
+    username = user;
     
-    IF trg_permissao = 'A' AND :old.finalizado = 'N'
+    IF permissao_sessao = 'C' and :old.finalizado = 'S' AND UPDATING THEN
+    raise_application_error(-20002, 'Você não tem permissao para alterar ou atualizar a tabela alunos.');
     
-    ELSIF trg_permissao = 'C' AND :old.finalizado = 'N'
-    
-    IF :old.finalizado = 'S' THEN
-    raise_application_error(-20002, 'Impossível Alterar, o Aluno Está Finalizado');
+    ELSIF permissao_sessao = 'A' and :old.finalizado = 'S' AND DELETING THEN
+    raise_application_error(-20002, 'Você não pode deletar esse estudante.');
     END IF;
-END ;
+END;
 
-SELECT * FROM alunos;
+CREATE USER admin ;
+
+select * from usuarios;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
