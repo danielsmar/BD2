@@ -1,11 +1,10 @@
-
 -- Cria a tabela alunos com as restrições
 DROP TABLE alunos CASCADE CONSTRAINTS;
 CREATE TABLE alunos 
    ( codAluno    NUMBER(8) NOT NULL
    , nome        VARCHAR2(100) NOT NULL
    , nota        NUMBER(4,2)
-   , finalizado  CHAR(1) DEFAULT 'N' CONSTRAINT alunos_finalizado NOT NULL
+   , finalizado  CHAR(1) DEFAULT 'N' NOT NULL
   );
 
 ALTER TABLE alunos  
@@ -52,8 +51,8 @@ WHERE codAluno = 20230001
 
 DROP TABLE usuarios CASCADE CONSTRAINTS;
 CREATE TABLE usuarios
-    (username   VARCHAR2(50) CONSTRAINT usuario_cargo_nn      NOT NULL
-    ,permissao  VARCHAR2(1)  CONSTRAINT usuarios_permissao_nn NOT NULL
+    (username   VARCHAR2(50)  NOT NULL
+    ,permissao  VARCHAR2(1)   NOT NULL
     );
     
 ALTER TABLE usuarios
@@ -121,5 +120,3 @@ CONNECT ADMIN/1234@localhost:1521/xepdb1
 
 DELETE alunos 
 WHERE codAluno = 20230001 ;
-
-
