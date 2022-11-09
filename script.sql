@@ -32,20 +32,21 @@ BEGIN
     :new.codAluno := seq_alunos.nextval;
 END;
 /
-
+--Inserindo dados na tabela alunos
 INSERT INTO alunos(nome, nota) VALUES('Daniel Valadares Marculano',10);
 INSERT INTO alunos(nome, nota) VALUES('Andre Prado Bonitao',9.9);
 INSERT INTO alunos(nome, nota) VALUES('Joao Vitor Tarzan',8.5);
 INSERT INTO alunos(nome, nota) VALUES('Pedro Lima Corno',5);
 INSERT INTO alunos(nome, nota) VALUES('Yuri Alberto Lider',10);
 
+--Criação da tabela usuarios com as restrições
 DROP TABLE usuarios CASCADE CONSTRAINTS;
 CREATE TABLE usuarios
     (username   VARCHAR2(50)  NOT NULL
     ,permissao  VARCHAR2(1)   NOT NULL
     );
     
-ALTER TABLE usuarios
+ALTER TABLE usuarios 
 ADD CONSTRAINT usuarios_pk PRIMARY KEy (username);
 
 ALTER TABLE usuarios
@@ -56,9 +57,11 @@ ALTER TABLE usuarios
 ADD CONSTRAINT usuario_cargo_ck
 CHECK (username in('HR', 'ADMIN'));
 
+--Inserindo dados na tabela alunos
 INSERT INTO usuarios(username, permissao) VALUES('ADMIN','A');
 INSERT INTO usuarios(username, permissao) VALUES('HR','C');
 
+--Criação do Trigger para verificar permissão do usuário logado
 CREATE OR REPLACE TRIGGER trg_usuarios_permissao
 BEFORE UPDATE OR DELETE ON alunos
 FOR EACH ROW
